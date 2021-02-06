@@ -47,7 +47,19 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: '/api',
+    proxy: true
+  },
+
+  proxy: {
+    '/api/': {
+      target: 'http://localhost:1323',
+      pathRewrite: {
+        '^/api/': ''
+      }
+    }
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

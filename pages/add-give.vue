@@ -14,7 +14,48 @@
 
     <v-col>
       <v-sheet min-height="70vh" rounded="lg">
-        <!--  -->
+        <v-form>
+          <v-container>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-select
+                  label="ผู้ถวาย"
+                  :items="supporters"
+                  item-text="firstname"
+                  item-value="code"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  label="จำนวนเงิน"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-select
+                  label="ผู้ติดตาม"
+                  :items="staffs"
+                  item-text="firstname"
+                  item-value="code"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-select
+                  label="ผู้รับเงิน"
+                  :items="staffs"
+                  item-text="firstname"
+                  item-value="code"
+                ></v-select>
+              </v-col>
+            </v-row>
+
+          </v-container>
+        </v-form>
       </v-sheet>
     </v-col>
   </v-row>
@@ -22,6 +63,14 @@
 
 <script>
 export default {
+  async mounted() {
+    const [staffs, supporters] = await Promise.all([
+        this.$axios.$get('/api/staffs'),
+        this.$axios.$get('/api/supporters')
+    ])
+    this.staffs = staffs
+    this.supporters = supporters
+  },
   data() {
     return {
       links: [
@@ -34,6 +83,9 @@ export default {
           target: '/add-give'
         },
       ],
+      staffs: [],
+      supporters: [],
+      banks: [],
     }
   },
 }
