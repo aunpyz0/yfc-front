@@ -1,175 +1,151 @@
 <template>
   <v-row>
-    <v-col md="4" offset-md="4" class="mt-3">
-      <v-sheet min-height="70vh" rounded="lg" class="pa-3">
+    <v-col md="4" offset-md="4" class="mt-2">
+      <v-sheet rounded="lg" class="pa-3">
         <v-form>
           <v-container>
-            <v-row>
-              <v-col>
                 <v-select
                   label="ผู้ถวาย"
                   :items="supporters"
                   item-text="firstname"
                   item-value="code"
+                  outlined
+                  dense
                 ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
                 <v-text-field
-                  label="จำนวนเงิน"
+                  label="จำนวนเงิน (บาท)"
+                  outlined
+                  dense
                 ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
                 <v-select
                   label="ช่องทาง"
                   :items="payment_types"
                   item-text="name"
                   item-value="id"
+                  outlined
+                  dense
                 ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
                 <v-select
                   label="ประเภท"
                   :items="give_types"
                   item-text="name"
                   item-value="id"
                   v-model="form.give_type"
+                  outlined
+                  dense
                 ></v-select>
-              </v-col>
-            </v-row>
-            <v-row v-if="form.give_type === 1">
-              <v-col md="6">
-                <v-menu
-                  ref="giveFrom"
-                  v-model="isShowGiveFromPicker"
-                  :close-on-content-click="false"
-                  :return-value.sync="form.give_from"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="form.give_from"
-                      label="จากเดือน"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="form.give_from"
-                    type="month"
-                    no-title
-                    scrollable
-                  >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="isShowGiveFromPicker = false"
+                <v-row>
+                  <v-col>
+                    <v-menu
+                      ref="giveFrom"
+                      v-model="isShowGiveFromPicker"
+                      :close-on-content-click="false"
+                      :return-value.sync="form.give_from"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="auto"
                     >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.giveFrom.save(form.give_from)"
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="form.give_from"
+                          label="จากเดือน"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="form.give_from"
+                        type="month"
+                        no-title
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="isShowGiveFromPicker = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.giveFrom.save(form.give_from)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                  </v-col>
+                  <v-col>
+                    <v-menu
+                      ref="giveTo"
+                      v-model="isShowGiveToPicker"
+                      :close-on-content-click="false"
+                      :return-value.sync="form.to"
+                      transition="scale-transition"
+                      offset-y
+                      max-width="290px"
+                      min-width="auto"
                     >
-                      OK
-                    </v-btn>
-                  </v-date-picker>
-                </v-menu>
-              </v-col>
-              <v-col md="6">
-                <v-menu
-                  ref="giveTo"
-                  v-model="isShowGiveToPicker"
-                  :close-on-content-click="false"
-                  :return-value.sync="form.to"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="auto"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-text-field
-                      v-model="form.give_to"
-                      label="ถึงเดือน"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker
-                    v-model="form.give_to"
-                    type="month"
-                    no-title
-                    scrollable
-                  >
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="isShowGiveToPicker = false"
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      text
-                      color="primary"
-                      @click="$refs.giveTo.save(form.to)"
-                    >
-                      OK
-                    </v-btn>
-                  </v-date-picker>
-                </v-menu>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="form.give_to"
+                          label="ถึงเดือน"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="form.give_to"
+                        type="month"
+                        no-title
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="isShowGiveToPicker = false"
+                        >
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.giveTo.save(form.to)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                  </v-col>
+                </v-row>
                 <v-select
                   label="แผนก"
                   :items="departments"
                   item-text="name"
                   item-value="id"
+                  outlined
+                  dense
                 ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
                 <v-select
                   label="ผู้ติดตาม"
                   :items="staffs"
                   item-text="firstname"
                   item-value="code"
+                  outlined
+                  dense
                 ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-select
-                  label="ผู้รับเงิน"
-                  :items="staffs"
-                  item-text="firstname"
-                  item-value="code"
-                ></v-select>
-              </v-col>
-            </v-row>
-             <v-row>
-              <v-col class="d-flex justify-end">
-                <v-btn color="secondary" class="mr-3" to="/give">ยกเลิก</v-btn>
-                <v-btn color="primary">บันทึก</v-btn>
-              </v-col>
-            </v-row>
+                <div class="d-flex justify-end">
+                  <v-btn color="secondary" class="mr-3" to="/give">ยกเลิก</v-btn>
+                  <v-btn color="primary">บันทึก</v-btn>
+                </div>
           </v-container>
         </v-form>
       </v-sheet>

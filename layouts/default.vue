@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <v-app-bar app color="white" flat>
       <v-container class="py-0 fill-height">
         <v-btn v-for="link in links" :key="link.path" text :to="link.path">
@@ -41,3 +41,8 @@ export default {
 }
 </script>
 
+<style>
+.v-application {
+  font-family: 'Kanit', sans-serif;
+}
+</style>
