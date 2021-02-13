@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col md="8" offset-md="2">
+        <v-col>
             <div class="d-flex justify-end">
                 <v-btn elevation="2" class="my-3" color="primary" to="/give/new"
                     >เพิ่มรายการ</v-btn
