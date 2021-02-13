@@ -1,15 +1,9 @@
 <template>
-  <div>
-    edit {{ id }}
-  </div>
+    <div>edit {{ id }}</div>
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
-<style>
-
-</style>
+<style></style>
