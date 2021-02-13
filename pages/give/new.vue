@@ -26,98 +26,191 @@
                             outlined
                             dense
                         ></v-select>
-                        <v-menu
-                            v-if="form.paymentType === 1"
-                            ref="transferDate"
-                            v-model="isShowTransferDatePicker"
-                            :close-on-content-click="false"
-                            :return-value.sync="form.transferDate"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                        >
-                            <template #activator="{ on, attrs }">
+                        <!-- Begin Bank Transfer -->
+                        <v-row v-show="form.paymentType === 1">
+                            <v-col >
+                                <v-menu
+                                    ref="transferDate"
+                                    v-model="isShowTransferDatePicker"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="form.transferDate"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="auto"
+                                >
+                                    <template #activator="{ on, attrs }">
+                                        <v-text-field
+                                            v-model="form.transferDate"
+                                            label="วันที่โอน"
+                                            prepend-icon="mdi-calendar"
+                                            readonly
+                                            v-bind="attrs"
+                                            v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                        v-model="form.transferDate"
+                                        type="date"
+                                        no-title
+                                        scrollable
+                                    >
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="isShowTransferDatePicker = false"
+                                        >
+                                            ยกเลิก
+                                        </v-btn>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="
+                                                $refs.transferDate.save(
+                                                    form.transferDate
+                                                )
+                                            "
+                                        >
+                                            ตกลง
+                                        </v-btn>
+                                    </v-date-picker>
+                                </v-menu>
+                                <v-menu
+                                    ref="transferTime"
+                                    v-model="isShowTransferTimePicker"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="form.transferTime"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="auto"
+                                >
+                                    <template #activator="{ on, attrs }">
+                                        <v-text-field
+                                            v-model="form.transferTime"
+                                            label="เวลาที่โอน"
+                                            prepend-icon="mdi-clock-outline"
+                                            readonly
+                                            v-bind="attrs"
+                                            v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-time-picker
+                                        v-model="form.transferTime"
+                                        format="24hr"
+                                    >
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="isShowTransferTimePicker = false"
+                                        >
+                                            ยกเลิก
+                                        </v-btn>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="
+                                                $refs.transferTime.save(
+                                                    form.transferTime
+                                                )
+                                            "
+                                        >
+                                            ตกลง
+                                        </v-btn>
+                                    </v-time-picker>
+                                </v-menu>
+                                <v-select
+                                    v-model="form.bankFrom"
+                                    label="โอนจากธนาคาร"
+                                    :items="[]"
+                                    item-text="name"
+                                    item-value="id"
+                                    outlined
+                                    dense
+                                ></v-select>
+                                <v-select
+                                    v-model="form.bankTo"
+                                    label="โอนเข้าธนาคาร"
+                                    :items="[]"
+                                    item-text="name"
+                                    item-value="id"
+                                    outlined
+                                    dense
+                                ></v-select>
+                            </v-col>
+                        </v-row>
+                        <!-- End Bank Transfer -->
+                        <!-- Begin Cheque -->
+                        <v-row v-show="form.paymentType === 3">
+                            <v-col>
+                                <v-select
+                                    v-model="form.giveType"
+                                    label="ธนาคาร"
+                                    :items="[]"
+                                    item-text="name"
+                                    item-value="id"
+                                    outlined
+                                    dense
+                                ></v-select>
                                 <v-text-field
-                                    v-model="form.transferDate"
-                                    label="วันที่โอน"
-                                    prepend-icon="mdi-calendar"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
+                                    label="สาขา"
+                                    outlined
+                                    dense
                                 ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="form.transferDate"
-                                type="date"
-                                no-title
-                                scrollable
-                            >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="isShowTransferDatePicker = false"
-                                >
-                                    ยกเลิก
-                                </v-btn>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="
-                                        $refs.transferDate.save(
-                                            form.transferDate
-                                        )
-                                    "
-                                >
-                                    ตกลง
-                                </v-btn>
-                            </v-date-picker>
-                        </v-menu>
-                        <v-menu
-                            v-if="form.paymentType === 1"
-                            ref="transferTime"
-                            v-model="isShowTransferTimePicker"
-                            :close-on-content-click="false"
-                            :return-value.sync="form.transferTime"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                        >
-                            <template #activator="{ on, attrs }">
                                 <v-text-field
-                                    v-model="form.transferTime"
-                                    label="เวลาที่โอน"
-                                    prepend-icon="mdi-clock-outline"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
+                                    label="เลขที่เช็ค"
+                                    outlined
+                                    dense
                                 ></v-text-field>
-                            </template>
-                            <v-time-picker
-                                v-model="form.transferTime"
-                                format="24hr"
-                            >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="isShowTransferTimePicker = false"
+                                 <v-menu
+                                    ref="chequeDate"
+                                    v-model="isShowChequeDatePicker"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="form.chequeDate"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="auto"
                                 >
-                                    ยกเลิก
-                                </v-btn>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="
-                                        $refs.transferTime.save(
-                                            form.transferTime
-                                        )
-                                    "
-                                >
-                                    ตกลง
-                                </v-btn>
-                            </v-time-picker>
-                        </v-menu>
+                                    <template #activator="{ on, attrs }">
+                                        <v-text-field
+                                            v-model="form.chequeDate"
+                                            label="วันที่เช็ค"
+                                            prepend-icon="mdi-calendar"
+                                            readonly
+                                            v-bind="attrs"
+                                            v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                        v-model="form.chequeDate"
+                                        type="date"
+                                        no-title
+                                        scrollable
+                                    >
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="isShowTransferDatePicker = false"
+                                        >
+                                            ยกเลิก
+                                        </v-btn>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="
+                                                $refs.transferDate.save(
+                                                    form.transferDate
+                                                )
+                                            "
+                                        >
+                                            ตกลง
+                                        </v-btn>
+                                    </v-date-picker>
+                                </v-menu>
+                            </v-col>
+                        </v-row>
+                        <!-- End Cheque -->
                         <v-select
                             v-model="form.giveType"
                             label="ประเภทการถวาย"
@@ -127,92 +220,94 @@
                             outlined
                             dense
                         ></v-select>
-                        <v-menu
-                            v-if="form.giveType === 1"
-                            ref="giveFrom"
-                            v-model="isShowGiveFromPicker"
-                            :close-on-content-click="false"
-                            :return-value.sync="form.giveFrom"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                        >
-                            <template #activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="form.giveFrom"
-                                    label="จากเดือน"
-                                    prepend-icon="mdi-calendar"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                                ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="form.giveFrom"
-                                type="month"
-                                no-title
-                                scrollable
-                            >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="isShowGiveFromPicker = false"
+                        <v-row v-show="form.giveType === 1">
+                            <v-col>
+                                <v-menu
+                                    ref="giveFrom"
+                                    v-model="isShowGiveFromPicker"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="form.giveFrom"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="auto"
                                 >
-                                    ยกเลิก
-                                </v-btn>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="$refs.giveFrom.save(form.giveFrom)"
+                                    <template #activator="{ on, attrs }">
+                                        <v-text-field
+                                            v-model="form.giveFrom"
+                                            label="จากเดือน"
+                                            prepend-icon="mdi-calendar"
+                                            readonly
+                                            v-bind="attrs"
+                                            v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                        v-model="form.giveFrom"
+                                        type="month"
+                                        no-title
+                                        scrollable
+                                    >
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="isShowGiveFromPicker = false"
+                                        >
+                                            ยกเลิก
+                                        </v-btn>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="$refs.giveFrom.save(form.giveFrom)"
+                                        >
+                                            ตกลง
+                                        </v-btn>
+                                    </v-date-picker>
+                                </v-menu>
+                                <v-menu
+                                    ref="giveTo"
+                                    v-model="isShowGiveToPicker"
+                                    :close-on-content-click="false"
+                                    :return-value.sync="form.giveTo"
+                                    transition="scale-transition"
+                                    offset-y
+                                    min-width="auto"
                                 >
-                                    ตกลง
-                                </v-btn>
-                            </v-date-picker>
-                        </v-menu>
-                        <v-menu
-                            v-if="form.giveTo === 1"
-                            ref="giveTo"
-                            v-model="isShowGiveToPicker"
-                            :close-on-content-click="false"
-                            :return-value.sync="form.giveTo"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                        >
-                            <template #activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="form.giveTo"
-                                    label="ถึงเดือน"
-                                    prepend-icon="mdi-calendar"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                                ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="form.giveTo"
-                                type="month"
-                                no-title
-                                scrollable
-                            >
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="isShowGiveToPicker = false"
-                                >
-                                    ยกเลิก
-                                </v-btn>
-                                <v-btn
-                                    text
-                                    color="primary"
-                                    @click="$refs.giveTo.save(form.giveTo)"
-                                >
-                                    ตกลง
-                                </v-btn>
-                            </v-date-picker>
-                        </v-menu>
+                                    <template #activator="{ on, attrs }">
+                                        <v-text-field
+                                            v-model="form.giveTo"
+                                            label="ถึงเดือน"
+                                            prepend-icon="mdi-calendar"
+                                            readonly
+                                            v-bind="attrs"
+                                            v-on="on"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                        v-model="form.giveTo"
+                                        type="month"
+                                        no-title
+                                        scrollable
+                                    >
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="isShowGiveToPicker = false"
+                                        >
+                                            ยกเลิก
+                                        </v-btn>
+                                        <v-btn
+                                            text
+                                            color="primary"
+                                            @click="$refs.giveTo.save(form.giveTo)"
+                                        >
+                                            ตกลง
+                                        </v-btn>
+                                    </v-date-picker>
+                                </v-menu>
+                            </v-col>
+                        </v-row>
                         <v-select
                             label="แผนก"
                             :items="departments"
@@ -250,8 +345,10 @@ export default {
             isShowTransferTimePicker: false,
             isShowGiveFromPicker: false,
             isShowGiveToPicker: false,
+            isShowChequeDatePicker: false,
             form: {
                 paymentType: 1,
+                giveType: 1,
             },
             staffs: [
                 {
