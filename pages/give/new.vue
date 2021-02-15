@@ -6,7 +6,7 @@
                     <v-container>
                         <v-select
                             label="ผู้ถวาย"
-                            :items="supporters"
+                            :items="supportersWithFullname"
                             item-text="fullName"
                             item-value="code"
                             outlined
@@ -318,7 +318,7 @@
                         ></v-select>
                         <v-select
                             label="ผู้ติดตาม"
-                            :items="staffs"
+                            :items="staffsWithFullname"
                             item-text="fullName"
                             item-value="code"
                             outlined
@@ -338,7 +338,20 @@
 </template>
 
 <script>
+
+function Fullname(person) {
+    return {...person, fullName: `${person.firstname} ${person.lastname}`}
+}
+
 export default {
+    computed: {
+        staffsWithFullname() {
+            return this.staffs.map(Fullname)
+        },
+        supportersWithFullname() {
+            return this.supporters.map(Fullname)
+        }
+    },
     data() {
         return {
             isShowTransferDatePicker: false,
@@ -350,77 +363,36 @@ export default {
                 paymentType: 1,
                 giveType: 1,
             },
-            staffs: [
-                {
-                    id: 1,
-                    code: 1,
-                    firstName: 'ภีระวัฒน์',
-                    lastName: 'พุ่มบัว',
-                    fullName: 'ภีระวัฒน์ พุ่มบัว',
-                },
-            ],
-            supporters: [
-                {
-                    id: 1,
-                    code: 1,
-                    firstName: 'ภีระวัฒน์',
-                    lastName: 'พุ่มบัว',
-                    fullName: 'ภีระวัฒน์ พุ่มบัว',
-                },
-            ],
-            banks: [
-                {
-                    id: 1,
-                    name: 'ไทยพานิชย์',
-                },
-            ],
-            giveTypes: [
-                {
-                    id: 1,
-                    name: 'ถวายเพื่อเดือน',
-                },
-                {
-                    id: 2,
-                    name: 'ของขวัญ',
-                },
-                {
-                    id: 3,
-                    name: 'ค่าย YC 2021',
-                },
-            ],
-            departments: [
-                {
-                    id: 1,
-                    name: 'OA',
-                },
-                {
-                    id: 2,
-                    name: 'CNX',
-                },
-            ],
-            paymentTypes: [
-                {
-                    id: 1,
-                    name: 'โอนเงิน',
-                },
-                {
-                    id: 2,
-                    name: 'เงินสด',
-                },
-                {
-                    id: 3,
-                    name: 'เช็ค',
-                },
-            ],
+            staffs: [],
+            supporters: [],
+            banks: [],
+            giveTypes: [],
+            departments: [],
+            paymentTypes: [],
         }
     },
     async mounted() {
-        // const [staffs, supporters] = await Promise.all([
-        //     this.$axios.$get('/api/staffs'),
-        //     this.$axios.$get('/api/supporters')
-        // ])
-        // this.staffs = staffs
-        // this.supporters = supporters
+        const [
+            staffs,
+            supporters,
+            paymentTypes,
+            banks,
+            giveTypes,
+            departments,
+        ] = await Promise.all([
+            this.$axios.$get('/api/staffs'),
+            this.$axios.$get('/api/supporters'),
+            this.$axios.$get('/api/paymenttypes'),
+            this.$axios.$get('/api/banks'),
+            this.$axios.$get('/api/givetypes'),
+            this.$axios.$get('/api/departments'),
+        ])
+        this.staffs = staffs
+        this.supporters = supporters
+        this.paymentTypes = paymentTypes
+        this.banks = banks
+        this.giveTypes = giveTypes
+        this.departments = departments
     },
 }
 </script>
