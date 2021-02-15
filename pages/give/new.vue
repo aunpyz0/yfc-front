@@ -5,6 +5,7 @@
                 <v-form>
                     <v-container>
                         <v-select
+                            v-model="form.supporterId"
                             label="ผู้ถวาย"
                             :items="supportersWithFullname"
                             item-text="fullName"
@@ -13,12 +14,13 @@
                             dense
                         ></v-select>
                         <v-text-field
+                            v-model="form.amount"
                             label="จำนวนเงิน (บาท)"
                             outlined
                             dense
                         ></v-text-field>
                         <v-select
-                            v-model="form.paymentType"
+                            v-model="form.paymentTypeId"
                             label="ช่องทางการจ่ายเงิน"
                             :items="paymentTypes"
                             item-text="name"
@@ -27,7 +29,7 @@
                             dense
                         ></v-select>
                         <!-- Begin Bank Transfer -->
-                        <v-row v-show="form.paymentType === 1">
+                        <v-row v-show="form.paymentTypeId === 1">
                             <v-col >
                                 <v-menu
                                     ref="transferDate"
@@ -122,7 +124,7 @@
                                 <v-select
                                     v-model="form.bankFrom"
                                     label="โอนจากธนาคาร"
-                                    :items="[]"
+                                    :items="banks"
                                     item-text="name"
                                     item-value="id"
                                     outlined
@@ -131,7 +133,7 @@
                                 <v-select
                                     v-model="form.bankTo"
                                     label="โอนเข้าธนาคาร"
-                                    :items="[]"
+                                    :items="banks"
                                     item-text="name"
                                     item-value="id"
                                     outlined
@@ -141,23 +143,25 @@
                         </v-row>
                         <!-- End Bank Transfer -->
                         <!-- Begin Cheque -->
-                        <v-row v-show="form.paymentType === 3">
+                        <v-row v-show="form.paymentTypeId === 3">
                             <v-col>
                                 <v-select
-                                    v-model="form.giveType"
+                                    v-model="form.giveTypeId"
                                     label="ธนาคาร"
-                                    :items="[]"
+                                    :items="banks"
                                     item-text="name"
                                     item-value="id"
                                     outlined
                                     dense
                                 ></v-select>
                                 <v-text-field
+                                    v-model="form.checqueBankBranch"
                                     label="สาขา"
                                     outlined
                                     dense
                                 ></v-text-field>
                                 <v-text-field
+                                    v-model="form.checqueNumber"
                                     label="เลขที่เช็ค"
                                     outlined
                                     dense
@@ -212,7 +216,7 @@
                         </v-row>
                         <!-- End Cheque -->
                         <v-select
-                            v-model="form.giveType"
+                            v-model="form.giveTypeId"
                             label="ประเภทการถวาย"
                             :items="giveTypes"
                             item-text="name"
@@ -220,7 +224,7 @@
                             outlined
                             dense
                         ></v-select>
-                        <v-row v-show="form.giveType === 1">
+                        <v-row v-show="form.giveTypeId === 1">
                             <v-col>
                                 <v-menu
                                     ref="giveFrom"
@@ -309,6 +313,7 @@
                             </v-col>
                         </v-row>
                         <v-select
+                            v-model="form.departmentId"
                             label="แผนก"
                             :items="departments"
                             item-text="name"
@@ -317,6 +322,7 @@
                             dense
                         ></v-select>
                         <v-select
+                            v-model="form.staffId"
                             label="ผู้ติดตาม"
                             :items="staffsWithFullname"
                             item-text="fullName"
@@ -328,7 +334,7 @@
                             <v-btn color="secondary" class="mr-3" to="/give"
                                 >ยกเลิก</v-btn
                             >
-                            <v-btn color="primary">บันทึก</v-btn>
+                            <v-btn color="primary" @click.prevent="save">บันทึก</v-btn>
                         </div>
                     </v-container>
                 </v-form>
@@ -338,18 +344,15 @@
 </template>
 
 <script>
-
-function Fullname(person) {
-    return {...person, fullName: `${person.firstname} ${person.lastname}`}
-}
+import { parseISO, set } from 'date-fns'
 
 export default {
     computed: {
         staffsWithFullname() {
-            return this.staffs.map(Fullname)
+            return this.staffs.map(fullname)
         },
         supportersWithFullname() {
-            return this.supporters.map(Fullname)
+            return this.supporters.map(fullname)
         }
     },
     data() {
@@ -360,8 +363,8 @@ export default {
             isShowGiveToPicker: false,
             isShowChequeDatePicker: false,
             form: {
-                paymentType: 1,
-                giveType: 1,
+                paymentTypeId: 1,
+                giveTypeId: 1,
             },
             staffs: [],
             supporters: [],
@@ -369,6 +372,28 @@ export default {
             giveTypes: [],
             departments: [],
             paymentTypes: [],
+        }
+    },
+    methods: {
+        save() {
+            const give = {
+                supporterId: this.form.supporterId,
+                amount: this.form.amount,
+                paymentTypeId: this.form.paymentTypeId,
+                giveTypeId: this.form.giveTypeId,
+                ownerId: this.form.ownerId,
+                departmentId: this.form.departmentId
+            }
+
+            if (give.paymentTypeId === 1) { // bank transfer
+                const [hours, minutes] = this.form.transferTime.split(':')
+                give.transferDate = set(parseISO(this.form.transferDate), { hours, minutes })
+                give.transferFromBankId = this.form.transferFromBankId
+                give.transferToBankId = this.form.transferToBankId
+            }
+            if (give.paymentTypeId === 3) { // cheque
+                // handle cheque
+            }
         }
     },
     async mounted() {
@@ -395,4 +420,14 @@ export default {
         this.departments = departments
     },
 }
+
+function fullname(person) {
+    return {...person, fullName: `${person.firstname} ${person.lastname}`}
+}
+
+function transferDate(transferDateStr, transferTimeStr) {
+    const [ hours, minutes ] = transferTimeStr.split(':')
+    return
+}
+
 </script>
