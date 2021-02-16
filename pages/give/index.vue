@@ -6,13 +6,33 @@
                     >เพิ่มรายการ</v-btn
                 >
             </div>
-            <v-data-table :headers="headers" :items="items"></v-data-table>
+            <v-data-table :headers="headers" :items="giveItems"></v-data-table>
         </v-col>
     </v-row>
 </template>
 
 <script>
+import format from 'date-fns/format'
+import numeral from 'numeral'
+
 export default {
+    computed: {
+        giveItems() {
+            return this.gives.map(give => {
+                let paymentDetail = '-'
+                return {
+                    date: format(new Date(give.transferDate), 'yyyy/MM/dd'),
+                    supporter: `${give.supporter.firstname} ${give.supporter.lastname}`,
+                    amount: numeral(give.amount).format('0,0.00'),
+                    giveType: give.giveType.name,
+                    department: give.department.name,
+                    owner: `${give.owner.firstname} ${give.owner.lastname}`,
+                    paymentType: give.paymentType.name,
+                    paymentDetail
+                }
+            })
+        }
+    },
     data() {
         return {
             headers: [
@@ -29,8 +49,8 @@ export default {
                     value: 'amount',
                 },
                 {
-                    text: 'ประเภท',
-                    value: 'give_type',
+                    text: 'ประเภทเงินถวาย',
+                    value: 'giveType',
                 },
                 {
                     text: 'แผนก',
@@ -41,44 +61,24 @@ export default {
                     value: 'owner',
                 },
                 {
-                    text: 'ผู้รับเงิน',
-                    value: 'receiver',
+                    text: 'ช่องทางการจ่ายเงิน',
+                    value: 'paymentType',
                 },
                 {
-                    text: 'ช่องทาง',
-                    value: 'payment_type',
-                },
-                {
-                    text: 'รายละเอียด',
-                    value: 'payment_detail',
+                    text: 'รายละเอียดการจ่ายเงิน',
+                    value: 'paymentDetail',
                 },
             ],
-            items: [
-                {
-                    date: new Date(),
-                    supporter: 'test',
-                    amount: 100,
-                    give_type: 'รายเดือน',
-                    department: 'test',
-                    owner: 'เอ',
-                    receiver: 'นาย',
-                    payment_type: 'T/R',
-                    payment_detail: '-',
-                },
-                {
-                    date: new Date(),
-                    supporter: 'test',
-                    amount: 100,
-                    give_type: 'รายเดือน',
-                    department: 'test',
-                    owner: 'เอ',
-                    receiver: 'นาย',
-                    payment_type: 'T/R',
-                    payment_detail: '-',
-                },
-            ],
+            gives: [],
         }
     },
+    async mounted() {
+        try {
+            this.gives = await this.$axios.$get('/api/gives')
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 </script>
 

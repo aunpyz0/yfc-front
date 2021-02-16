@@ -2,6 +2,26 @@
     <v-row>
         <v-col md="4" offset-md="4" class="mt-2">
             <v-sheet rounded="lg" class="pa-3">
+                <v-snackbar
+                    v-model="alert.isShow"
+                    timeout="3000"
+                    transition="scroll-y-reverse-transition"
+                    centered
+                    top
+                    :color="alert.color"
+                >
+                    {{ alert.message }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                            color="white"
+                            text
+                            v-bind="attrs"
+                            @click="closeAlert()"
+                        >
+                        ปิด
+                        </v-btn>
+                    </template>
+                </v-snackbar>
                 <v-form>
                     <v-container>
                         <v-select
@@ -9,12 +29,12 @@
                             label="ผู้ถวาย"
                             :items="supportersWithFullname"
                             item-text="fullName"
-                            item-value="code"
+                            item-value="id"
                             outlined
                             dense
                         ></v-select>
                         <v-text-field
-                            v-model="form.amount"
+                            v-model.number="form.amount"
                             label="จำนวนเงิน (บาท)"
                             outlined
                             dense
@@ -155,13 +175,13 @@
                                     dense
                                 ></v-select>
                                 <v-text-field
-                                    v-model="form.checqueBankBranch"
+                                    v-model="form.chequeBankBranch"
                                     label="สาขา"
                                     outlined
                                     dense
                                 ></v-text-field>
                                 <v-text-field
-                                    v-model="form.checqueNumber"
+                                    v-model="form.chequeNumber"
                                     label="เลขที่เช็ค"
                                     outlined
                                     dense
@@ -203,8 +223,8 @@
                                             text
                                             color="primary"
                                             @click="
-                                                $refs.transferDate.save(
-                                                    form.transferDate
+                                                $refs.chequeDate.save(
+                                                    form.chequeDate
                                                 )
                                             "
                                         >
@@ -322,11 +342,11 @@
                             dense
                         ></v-select>
                         <v-select
-                            v-model="form.staffId"
+                            v-model="form.ownerId"
                             label="ผู้ติดตาม"
                             :items="staffsWithFullname"
                             item-text="fullName"
-                            item-value="code"
+                            item-value="id"
                             outlined
                             dense
                         ></v-select>
@@ -366,6 +386,9 @@ export default {
                 paymentTypeId: 1,
                 giveTypeId: 1,
             },
+            alert: {
+                isShow: false
+            },
             staffs: [],
             supporters: [],
             banks: [],
@@ -392,8 +415,36 @@ export default {
                 give.transferToBankId = this.form.transferToBankId
             }
             if (give.paymentTypeId === 3) { // cheque
-                // handle cheque
+                give.chequeBankId = this.form.chequeBankId
+                give.chequeBanBranch = this.form.chequeBankBranch
+                give.chequeNumber = this.form.chequeNumber
+                give.chequeDate = parseISO(this.form.chequeDate)
             }
+            if (give.giveTypeId === 1) {
+                give.giveFrom = parseISO(this.form.giveFrom)
+                give.giveTo = parseISO(this.form.giveTo)
+            }
+
+            this.$axios.$post('/api/gives', give)
+                .then(() => {
+                    this.showSuccessAlert()
+                })
+                .catch(err => {
+                    this.showFailAlert()
+                })
+        },
+        showSuccessAlert() {
+            this.alert.message = 'บันทึกสำเร็จแล้ว'
+            this.alert.isShow = true
+            this.alert.color = 'green'
+        },
+        showFailAlert() {
+            this.alert.message = 'บันทึกไม่สำเร็จ'
+            this.alert.isShow = true
+            this.alert.color = 'red'
+        },
+        closeAlert() {
+            this.alert.isShow = false
         }
     },
     async mounted() {
@@ -423,11 +474,6 @@ export default {
 
 function fullname(person) {
     return {...person, fullName: `${person.firstname} ${person.lastname}`}
-}
-
-function transferDate(transferDateStr, transferTimeStr) {
-    const [ hours, minutes ] = transferTimeStr.split(':')
-    return
 }
 
 </script>
