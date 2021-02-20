@@ -7,6 +7,7 @@
                     :key="link.path"
                     text
                     :to="link.path"
+                    color="primary"
                 >
                     {{ link.name }}
                 </v-btn>
