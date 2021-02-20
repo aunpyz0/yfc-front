@@ -27,7 +27,7 @@ export default {
         links: [
             {
                 name: 'เงินถวาย',
-                path: '/give',
+                path: '/',
             },
             {
                 name: 'สตาฟ',
@@ -39,7 +39,7 @@ export default {
             },
             {
                 name: 'ข้อมูลพื้นฐาน',
-                path: '/master',
+                path: '/master/givetype',
             },
         ],
     }),
