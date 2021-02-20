@@ -425,7 +425,7 @@ export default {
                 give.giveTo = parseISO(this.form.giveTo)
             }
 
-            this.$axios.$post('/api/gives', give)
+            this.$axios.$post('/gives', give)
                 .then(() => {
                     this.showSuccessAlert()
                 })
@@ -456,12 +456,12 @@ export default {
             giveTypes,
             departments,
         ] = await Promise.all([
-            this.$axios.$get('/api/staffs'),
-            this.$axios.$get('/api/supporters'),
-            this.$axios.$get('/api/paymenttypes'),
-            this.$axios.$get('/api/banks'),
-            this.$axios.$get('/api/givetypes'),
-            this.$axios.$get('/api/departments'),
+            this.$axios.$get('/staffs'),
+            this.$axios.$get('/supporters'),
+            this.$axios.$get('/paymenttypes'),
+            this.$axios.$get('/banks'),
+            this.$axios.$get('/givetypes'),
+            this.$axios.$get('/departments'),
         ])
         this.staffs = staffs
         this.supporters = supporters

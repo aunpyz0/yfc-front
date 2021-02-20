@@ -74,7 +74,7 @@ export default {
     },
     async mounted() {
         try {
-            this.gives = await this.$axios.$get('/api/gives')
+            this.gives = await this.$axios.$get('/gives')
         } catch (e) {
             console.error(e)
         }
