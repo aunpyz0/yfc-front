@@ -3,14 +3,14 @@
         <v-col>
             <v-data-table
                 :headers="headers"
-                :items="givetypes"
+                :items="items"
                 class="elevation-1"
             >
                 <template v-slot:top>
                     <v-toolbar
                         flat
                     >
-                        <v-toolbar-title>ประเภทการถวายทั้งหมด</v-toolbar-title>
+                        <v-toolbar-title>แผนกทั้งหมด</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
                         <v-dialog
@@ -34,7 +34,7 @@
                                 </v-card-title>
                                 <v-card-text>
                                     <v-text-field
-                                        label="ประเภทการถวาย"
+                                        label="แผนก"
                                         outlined
                                         dense
                                         v-model="editedItem.name"
@@ -74,7 +74,96 @@
 
 <script>
 export default {
-
+    computed: {
+        formTitle() {
+            return this.editedItem.id ?  'แก้ไขข้อมูล' : 'เพิ่มข้อมูล'
+        }
+    },
+    watch: {
+        dialog(val) {
+            val || this.close()
+        },
+        deleteDialog(val) {
+            val || this.closeDelete()
+        }
+    },
+    data() {
+        return {
+            headers: [
+                {
+                    text: 'แผนก',
+                    value: 'name'
+                },
+                {
+                    text: '',
+                    value: 'actions'
+                }
+            ],
+            items: [],
+            dialog: false,
+            deleteDialog: false,
+            editedItem: {}
+        }
+    },
+    async mounted() {
+        try {
+            this.items = await this.$axios.$get('/departments')
+        } catch (err) {
+            console.error(err)
+        }
+    },
+    methods: {
+        close() {
+            this.dialog = false
+            this.editedItem = {}
+        },
+        async save() {
+            try {
+                if (this.editedItem.id) {
+                    const updated = await this.$axios.$put(`/departments/${this.editedItem.id}`, {
+                        id: this.editedItem.id,
+                        name: this.editedItem.name,
+                    })
+                    this.items = this.items.map(item => item.id === updated.id ? updated : item)
+                } else {
+                    const created = await this.$axios.$post('/departments', {
+                        name: this.editedItem.name,
+                    })
+                    this.items = [...this.items, created]
+                }
+                this.dialog = false
+                this.editedItem = {}
+            } catch (e) {
+                console.error(e)
+                this.dialog = false
+                this.editedItem = {}
+            }
+        },
+        editItem(item) {
+            this.dialog = true
+            this.editedItem = { id: item.id, name: item.name }
+        },
+        deleteItem(item) {
+            this.deleteDialog = true
+            this.editedItem = { id: item.id }
+        },
+        closeDelete() {
+            this.deleteDialog = false
+            this.editedItem = {}
+        },
+        async confirmDelete() {
+            try {
+                await this.$axios.$delete(`/departments/${this.editedItem.id}`)
+                this.items = this.items.filter(item => item.id !== this.editedItem.id)
+                this.deleteDialog = false
+                this.editedItem = {}
+            } catch (e) {
+                console.error(e)
+                this.deleteDialog = false
+                this.editedItem = {}
+            }
+        }
+    }
 }
 </script>
 

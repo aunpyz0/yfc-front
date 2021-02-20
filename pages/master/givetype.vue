@@ -3,7 +3,7 @@
         <v-col>
             <v-data-table
                 :headers="headers"
-                :items="givetypes"
+                :items="items"
                 class="elevation-1"
             >
                 <template v-slot:top>
@@ -82,7 +82,10 @@ export default {
     watch: {
         dialog(val) {
             val || this.close()
-        }
+        },
+        deleteDialog(val) {
+            val || this.closeDelete()
+        },
     },
     data() {
         return {
@@ -96,7 +99,7 @@ export default {
                     value: 'actions'
                 }
             ],
-            givetypes: [],
+            items: [],
             dialog: false,
             deleteDialog: false,
             editedItem: {}
@@ -104,7 +107,7 @@ export default {
     },
     async mounted() {
         try {
-            this.givetypes = await this.$axios.$get('/givetypes')
+            this.items = await this.$axios.$get('/givetypes')
         } catch (err) {
             console.error(err)
         }
@@ -121,12 +124,12 @@ export default {
                         id: this.editedItem.id,
                         name: this.editedItem.name,
                     })
-                    this.givetypes = this.givetypes.map(item => item.id === updated.id ? updated : item)
+                    this.items = this.items.map(item => item.id === updated.id ? updated : item)
                 } else {
                     const created = await this.$axios.$post('/givetypes', {
                         name: this.editedItem.name,
                     })
-                    this.givetypes = [...this.givetypes, created]
+                    this.items = [...this.items, created]
                 }
                 this.dialog = false
                 this.editedItem = {}
@@ -151,7 +154,7 @@ export default {
         async confirmDelete() {
             try {
                 await this.$axios.$delete(`/givetypes/${this.editedItem.id}`)
-                this.givetypes = this.givetypes.filter(item => item.id !== this.editedItem.id)
+                this.items = this.items.filter(item => item.id !== this.editedItem.id)
                 this.deleteDialog = false
                 this.editedItem = {}
             } catch (e) {
