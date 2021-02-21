@@ -99,6 +99,7 @@
                                                                 readonly
                                                                 v-bind="attrs"
                                                                 v-on="on"
+                                                                dense
                                                             ></v-text-field>
                                                         </template>
                                                         <v-date-picker
@@ -145,6 +146,8 @@
                                                                 readonly
                                                                 v-bind="attrs"
                                                                 v-on="on"
+                                                                dense
+                                                                class="mb-4"
                                                             ></v-text-field>
                                                         </template>
                                                         <v-time-picker
@@ -190,6 +193,22 @@
                                                         outlined
                                                         dense
                                                     ></v-select>
+                                                    <v-file-input
+                                                        @change="preview"
+                                                        accept="image/*"
+                                                        label="หลักฐาน"
+                                                        chips
+                                                        dense
+                                                        class="mb-4"
+                                                        v-model="editedItem.evidence"
+                                                    ></v-file-input>
+                                                    <v-img
+                                                        max-width="300"
+                                                        :src="editedItem.url"
+                                                        class="mb-4 mx-auto"
+                                                        v-show="editedItem.url"
+                                                        alt="หลักฐานการถวาย"
+                                                    ></v-img>
                                                 </v-col>
                                             </v-row>
                                             <!-- End Bank Transfer -->
@@ -213,6 +232,8 @@
                                                                 readonly
                                                                 v-bind="attrs"
                                                                 v-on="on"
+                                                                dense
+                                                                class="mb-4"
                                                             ></v-text-field>
                                                         </template>
                                                         <v-date-picker
@@ -286,6 +307,7 @@
                                                                 readonly
                                                                 v-bind="attrs"
                                                                 v-on="on"
+                                                                dense
                                                             ></v-text-field>
                                                         </template>
                                                         <v-date-picker
@@ -315,6 +337,22 @@
                                                             </v-btn>
                                                         </v-date-picker>
                                                     </v-menu>
+                                                    <v-file-input
+                                                        @change="preview"
+                                                        accept="image/*"
+                                                        label="หลักฐาน"
+                                                        chips
+                                                        dense
+                                                        class="mb-4"
+                                                        v-model="editedItem.evidence"
+                                                    ></v-file-input>
+                                                    <v-img
+                                                        max-width="300"
+                                                        :src="editedItem.url"
+                                                        class="mb-4 mx-auto"
+                                                        v-show="editedItem.url"
+                                                        alt="หลักฐานการถวาย"
+                                                    ></v-img>
                                                 </v-col>
                                             </v-row>
                                             <!-- End Cheque -->
@@ -346,6 +384,7 @@
                                                                 readonly
                                                                 v-bind="attrs"
                                                                 v-on="on"
+                                                                dense
                                                             ></v-text-field>
                                                         </template>
                                                         <v-date-picker
@@ -388,6 +427,8 @@
                                                                 readonly
                                                                 v-bind="attrs"
                                                                 v-on="on"
+                                                                dense
+                                                                class="mb-4"
                                                             ></v-text-field>
                                                         </template>
                                                         <v-date-picker
@@ -456,9 +497,36 @@
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
+                        <v-dialog
+                            v-model="isShowEvidence"
+                            max-width="400px"
+                        >
+                            <v-card>
+                                <v-card-title>หลักฐาน</v-card-title>
+                                <v-card-text>
+                                     <v-img
+                                        max-width="400"
+                                        :src="editedItem.url"
+                                        class="mb-4 mx-auto"
+                                        alt="หลักฐานการถวาย"
+                                    ></v-img>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="primary" text @click="isShowEvidence = false">ปิด</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-toolbar>
                 </template>
+                <template v-slot:item.giveType="{ item }">
+                    <div class="py-2" v-html="item.giveDetail"></div>
+                </template>
+                <template v-slot:item.paymentDetail="{ item }">
+                    <div class="py-2" v-html="item.paymentDetail"></div>
+                </template>
                 <template v-slot:item.actions="{ item }">
+                    <v-icon small class="mr-2" @click="showEvidence(item)" v-show="item.evidence">mdi-paperclip</v-icon>
                     <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
                     <v-icon small class="mr-2" @click="deleteItem(item)">mdi-delete</v-icon>
                 </template>
@@ -484,27 +552,47 @@ export default {
         },
         giveItems() {
             return this.gives.map(give => {
-                let paymentDetail = '-'
                 let item = {
-                    id: give.id,
-                    supporter: `${give.supporter.firstname} ${give.supporter.lastname}`,
+                    ...give,
+                    supporterFullname: `${give.supporter.firstname} ${give.supporter.lastname}`,
                     amount: numeral(give.amount).format('0,0.00'),
-                    giveType: give.giveType.name,
-                    department: give.department.name,
-                    owner: `${give.owner.firstname} ${give.owner.lastname}`,
-                    paymentType: give.paymentType.name,
-                    paymentDetail
+                    ownerFullname: `${give.owner.firstname} ${give.owner.lastname}`,
                 }
                 if (give.paymentTypeId === 1) {
                     item.date = format(new Date(give.transferDate), 'yyyy/MM/dd')
-                } else if (give.paymentTypeId === 2) {
+                    item.paymentDetail = `
+                        <div><strong>วันเวลา:</strong> ${ format(new Date(give.transferDate), 'yyyy/MM/dd hh:mm') }</div>
+                        <div><strong>จาก:</strong> ${ item.transferFromBank.name }</div>
+                        <div><strong>ไปที่:</strong> ${ item.transferToBank.name }</div>
+                    `
+                }
+                if (give.paymentTypeId === 2) {
                     item.date = format(new Date(give.receiveDate), 'yyyy/MM/dd')
-                } else {
+                    item.paymentDetail = '-'
+                }
+                if (give.paymentTypeId === 3) {
                     item.date = format(new Date(give.chequeDate), 'yyyy/MM/dd')
+                    item.paymentDetail = `
+                        <div><strong>เลขที่:</strong> ${ give.chequeNumber }</div>
+                        <div><strong>วันที่:</strong> ${ item.date }</div>
+                        <div><strong>ธนาคาร:</strong> ${ give.chequeBank.name }</div>
+                        <div><strong>สาขา:</strong> ${ give.chequeBankBranch }</div>
+                    `
+                }
+                if (give.giveTypeId === 1) {
+                    item.giveDetail = `
+                        <div>${ give.giveType.name }</div>
+                        <div><strong>จาก:</strong> ${ format(new Date(give.giveFrom), 'yyyy-MM') }</div>
+                        <div><strong>ถึง:</strong> ${ format(new Date(give.giveTo), 'yyyy-MM')  }</div>
+                    `
+                }
+                if (give.evidence) {
+                    item.url = this.imageURL(give.evidence)
                 }
                 return item
             })
-        }
+        },
+
     },
     watch: {
         dialog(val) {
@@ -512,6 +600,9 @@ export default {
         },
         deleteDialog(val) {
             val || this.closeDelete()
+        },
+        isShowEvidence(val) {
+            val || this.hideEvidence()
         }
     },
     data() {
@@ -523,7 +614,7 @@ export default {
                 },
                 {
                     text: 'ผู้ถวาย',
-                    value: 'supporter',
+                    value: 'supporterFullname',
                 },
                 {
                     text: 'จำนวนเงิน',
@@ -535,15 +626,15 @@ export default {
                 },
                 {
                     text: 'แผนก',
-                    value: 'department',
+                    value: 'department.name',
                 },
                 {
                     text: 'ผู้ติดตาม',
-                    value: 'owner',
+                    value: 'ownerFullname',
                 },
                 {
                     text: 'ช่องทางการจ่ายเงิน',
-                    value: 'paymentType',
+                    value: 'paymentType.name',
                 },
                 {
                     text: 'รายละเอียดการจ่ายเงิน',
@@ -565,9 +656,14 @@ export default {
             },
             dialog: false,
             deleteDialog: false,
+            isShowEvidence: false,
             editedItem: {
                 paymentTypeId: 1,
                 giveTypeId: 1,
+                url: null,
+                transferFromBankId: 1,
+                transferToBankId: 1,
+                chequeBankId: 1,
             },
             gives: [],
             staffs: [],
@@ -613,6 +709,10 @@ export default {
             this.editedItem = {
                 paymentTypeId: 1,
                 giveTypeId: 1,
+                url: null,
+                transferFromBankId: 1,
+                transferToBankId: 1,
+                chequeBankId: 1,
             }
         },
         close() {
@@ -636,6 +736,7 @@ export default {
                     give.transferDate = set(parseISO(this.editedItem.transferDate), { hours, minutes })
                     give.transferFromBankId = this.editedItem.transferFromBankId
                     give.transferToBankId = this.editedItem.transferToBankId
+                    give.evidence = this.editedItem.evidence
                 }
                 if (give.paymentTypeId === 2) { // cash
                     give.receiveDate = parseISO(this.editedItem.receiveDate)
@@ -645,18 +746,30 @@ export default {
                     give.chequeBankBranch = this.editedItem.chequeBankBranch
                     give.chequeNumber = this.editedItem.chequeNumber
                     give.chequeDate = parseISO(this.editedItem.chequeDate)
+                    give.evidence = this.editedItem.evidence
                 }
                 if (give.giveTypeId === 1) {
                     give.giveFrom = parseISO(this.editedItem.giveFrom)
                     give.giveTo = parseISO(this.editedItem.giveTo)
                 }
 
+                const data = new FormData()
+                Object.keys(give).forEach(key => {
+                    data.append(key, give[key])
+                })
+                const config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+
                 if (give.id) {
-                    await this.$axios.$put(`/gives/${give.id}`, give)
+                    await this.$axios.$put(`/gives/${give.id}`, data, config)
                 } else {
-                    await this.$axios.$post('/gives', give)
+                    await this.$axios.$post('/gives', data, config)
                 }
                 this.gives = await this.$axios.$get('/gives')
+
                 this.close()
                 this.showSuccessAlert()
             } catch (err) {
@@ -682,7 +795,9 @@ export default {
             this.dialog = true
             const found = this.gives.find(give => give.id === item.id)
             this.editedItem = {
-                ...found
+                ...found,
+                evidence: null,
+                url: this.imageURL(found.evidence),
             }
             if (found.paymentTypeId === 1) {
                 const transferDate = parseISO(found.transferDate)
@@ -720,6 +835,22 @@ export default {
                 this.closeDelete()
                 this.showFailAlert()
             }
+        },
+        preview() {
+            if (this.editedItem.evidence) {
+                this.editedItem.url = URL.createObjectURL(this.editedItem.evidence)
+            }
+        },
+        showEvidence(item) {
+            this.isShowEvidence = true
+            this.editedItem.url = item.url
+        },
+        hideEvidence() {
+            this.isShowEvidence = false
+            this.editedItem.url = null
+        },
+        imageURL(evidence) {
+            return `${this.$axios.defaults.baseURL}/evidence/${evidence}`
         }
     }
 }
