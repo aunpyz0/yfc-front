@@ -1,17 +1,18 @@
 <template>
     <v-app>
         <v-app-bar app color="white" flat>
-            <v-container class="py-0 fill-height">
-                <v-btn
+            <v-tabs centered>
+                <v-tab
                     v-for="link in links"
                     :key="link.path"
-                    text
                     :to="link.path"
+                    text
                     color="primary"
+                    nuxt
                 >
                     {{ link.name }}
-                </v-btn>
-            </v-container>
+                </v-tab>
+            </v-tabs>
         </v-app-bar>
         <v-main class="grey lighten-3">
             <v-container>
@@ -23,26 +24,28 @@
 
 <script>
 export default {
-    data: () => ({
-        links: [
-            {
-                name: 'เงินถวาย',
-                path: '/',
-            },
-            {
-                name: 'สตาฟ',
-                path: '/staff',
-            },
-            {
-                name: 'ผู้ถวาย',
-                path: '/supporter',
-            },
-            {
-                name: 'ข้อมูลพื้นฐาน',
-                path: '/master/givetype',
-            },
-        ],
-    }),
+    data: () => {
+        return {
+            links: [
+                {
+                    name: 'เงินถวาย',
+                    path: '/',
+                },
+                {
+                    name: 'สตาฟ',
+                    path: '/staff',
+                },
+                {
+                    name: 'ผู้ถวาย',
+                    path: '/supporter',
+                },
+                {
+                    name: 'ข้อมูลพื้นฐาน',
+                    path: '/master/givetype',
+                },
+            ],
+        }
+    },
     computed: {
         sublinks() {
             const link = this.links.find((link) =>

@@ -21,6 +21,16 @@
                                 <v-list-item-title>ธนาคาร</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item to="/master/paymenttype" nuxt>
+                            <v-list-item-content>
+                                <v-list-item-title>ช่องทางการจ่ายเงิน</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item to="/master/role" nuxt>
+                            <v-list-item-content>
+                                <v-list-item-title>Role</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                     </v-list-item-group>
                 </v-list>
             </v-card>

@@ -561,9 +561,9 @@ export default {
                 if (give.paymentTypeId === 1) {
                     item.date = format(new Date(give.transferDate), 'yyyy/MM/dd')
                     item.paymentDetail = `
-                        <div><strong>วันเวลา:</strong> ${ format(new Date(give.transferDate), 'yyyy/MM/dd hh:mm') }</div>
-                        <div><strong>จาก:</strong> ${ item.transferFromBank.name }</div>
-                        <div><strong>ไปที่:</strong> ${ item.transferToBank.name }</div>
+                        <div><span>วันเวลา:</span> ${ format(new Date(give.transferDate), 'yyyy/MM/dd hh:mm') }</div>
+                        <div><span>จาก:</span> ${ item.transferFromBank.name }</div>
+                        <div><span>ไปที่:</span> ${ item.transferToBank.name }</div>
                     `
                 }
                 if (give.paymentTypeId === 2) {
@@ -573,18 +573,20 @@ export default {
                 if (give.paymentTypeId === 3) {
                     item.date = format(new Date(give.chequeDate), 'yyyy/MM/dd')
                     item.paymentDetail = `
-                        <div><strong>เลขที่:</strong> ${ give.chequeNumber }</div>
-                        <div><strong>วันที่:</strong> ${ item.date }</div>
-                        <div><strong>ธนาคาร:</strong> ${ give.chequeBank.name }</div>
-                        <div><strong>สาขา:</strong> ${ give.chequeBankBranch }</div>
+                        <div><span>เลขที่:</span> ${ give.chequeNumber }</div>
+                        <div><span>วันที่:</span> ${ item.date }</div>
+                        <div><span>ธนาคาร:</span> ${ give.chequeBank.name }</div>
+                        <div><span>สาขา:</span> ${ give.chequeBankBranch }</div>
                     `
                 }
                 if (give.giveTypeId === 1) {
                     item.giveDetail = `
                         <div>${ give.giveType.name }</div>
-                        <div><strong>จาก:</strong> ${ format(new Date(give.giveFrom), 'yyyy-MM') }</div>
-                        <div><strong>ถึง:</strong> ${ format(new Date(give.giveTo), 'yyyy-MM')  }</div>
+                        <div><span>จาก:</span> ${ format(new Date(give.giveFrom), 'yyyy-MM') }</div>
+                        <div><span>ถึง:</span> ${ format(new Date(give.giveTo), 'yyyy-MM')  }</div>
                     `
+                } else {
+                    item.giveDetail = give.giveType.name
                 }
                 if (give.evidence) {
                     item.url = this.imageURL(give.evidence)
