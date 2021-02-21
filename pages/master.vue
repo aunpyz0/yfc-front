@@ -5,7 +5,6 @@
                 <v-list>
                     <v-list-item-group
                         color="primary"
-                        v-model="selectedItem"
                     >
                         <v-list-item to="/master/givetype" nuxt>
                             <v-list-item-content>
