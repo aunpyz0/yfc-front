@@ -120,23 +120,20 @@ export default {
         async save() {
             try {
                 if (this.editedItem.id) {
-                    const updated = await this.$axios.$put(`/givetypes/${this.editedItem.id}`, {
+                    await this.$axios.$put(`/givetypes/${this.editedItem.id}`, {
                         id: this.editedItem.id,
                         name: this.editedItem.name,
                     })
-                    this.items = this.items.map(item => item.id === updated.id ? updated : item)
                 } else {
-                    const created = await this.$axios.$post('/givetypes', {
+                    await this.$axios.$post('/givetypes', {
                         name: this.editedItem.name,
                     })
-                    this.items = [...this.items, created]
                 }
-                this.dialog = false
-                this.editedItem = {}
+                this.items = await this.$axios.$get('/givetypes')
+                this.close()
             } catch (e) {
                 console.error(e)
-                this.dialog = false
-                this.editedItem = {}
+                this.close()
             }
         },
         editItem(item) {
@@ -154,13 +151,11 @@ export default {
         async confirmDelete() {
             try {
                 await this.$axios.$delete(`/givetypes/${this.editedItem.id}`)
-                this.items = this.items.filter(item => item.id !== this.editedItem.id)
-                this.deleteDialog = false
-                this.editedItem = {}
+                this.items = await this.$axios.$get('/givetypes')
+                this.closeDelete()
             } catch (e) {
                 console.error(e)
-                this.deleteDialog = false
-                this.editedItem = {}
+                this.closeDelete()
             }
         }
     }
