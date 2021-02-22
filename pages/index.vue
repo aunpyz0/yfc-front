@@ -2,25 +2,25 @@
     <v-row>
         <v-col>
             <v-snackbar
-                    v-model="alert.isShow"
-                    timeout="3000"
-                    transition="scroll-y-reverse-transition"
-                    centered
-                    top
-                    :color="alert.color"
-                >
-                    {{ alert.message }}
-                    <template v-slot:action="{ attrs }">
-                        <v-btn
-                            color="white"
-                            text
-                            v-bind="attrs"
-                            @click="closeAlert()"
-                        >
-                        ปิด
-                        </v-btn>
-                    </template>
-                </v-snackbar>
+                v-model="alert.isShow"
+                timeout="3000"
+                transition="scroll-y-reverse-transition"
+                centered
+                top
+                :color="alert.color"
+            >
+                {{ alert.message }}
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                        color="white"
+                        text
+                        v-bind="attrs"
+                        @click="closeAlert()"
+                    >
+                    ปิด
+                    </v-btn>
+                </template>
+            </v-snackbar>
             <v-data-table
                 :headers="headers"
                 :items="giveItems"
