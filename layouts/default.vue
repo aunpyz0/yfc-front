@@ -24,12 +24,13 @@
 
 <script>
 export default {
+    middleware: ['auth'],
     data: () => {
         return {
             links: [
                 {
                     name: 'เงินถวาย',
-                    path: '/',
+                    path: '/give',
                 },
                 {
                     name: 'สตาฟ',
