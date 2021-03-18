@@ -27,7 +27,12 @@ export default {
     css: ['@/assets/css/font.css'],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [],
+    plugins: [
+        {
+            src: '~/plugins/vuex-persist',
+            ssr: false,
+        },
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -48,7 +53,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: process.env.BASE_URL || 'http://localhost:8080'
+        baseURL: process.env.BASE_URL || 'http://localhost:8080',
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

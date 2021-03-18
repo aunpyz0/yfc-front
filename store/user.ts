@@ -4,8 +4,8 @@ export const state = () => ({
 
 
 export const mutations = {
-    setLogin(state: any, isLogin: Boolean) {
-        state.isLogin = isLogin
+    setIsLogin(state: any, isLogIn: Boolean) {
+        state.isLogIn = isLogIn
     },
     setUser(state: any, user: any) {
         state.user = user
