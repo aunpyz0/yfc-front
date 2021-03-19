@@ -1,16 +1,12 @@
 <template>
     <v-row>
         <v-col>
-            <v-data-table
-                :headers="headers"
-                :items="items"
-                class="elevation-1"
-            >
-                <template v-slot:top>
-                    <v-toolbar
-                        flat
-                    >
-                        <v-toolbar-title>ช่องทางการจ่ายเงินทั้งหมด</v-toolbar-title>
+            <v-data-table :headers="headers" :items="items" class="elevation-1">
+                <template #top>
+                    <v-toolbar flat>
+                        <v-toolbar-title
+                            >ช่องทางการจ่ายเงินทั้งหมด</v-toolbar-title
+                        >
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
                     </v-toolbar>
@@ -27,8 +23,8 @@ export default {
             headers: [
                 {
                     text: 'ช่องทางการจ่ายเงิน',
-                    value: 'name'
-                }
+                    value: 'name',
+                },
             ],
             items: [],
         }
@@ -43,6 +39,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,13 +1,24 @@
 export const state = () => ({
-    isLogIn: false,
+    user: null,
 })
 
-
 export const mutations = {
-    setIsLogin(state: any, isLogIn: Boolean) {
-        state.isLogIn = isLogIn
-    },
     setUser(state: any, user: any) {
         state.user = user
-    }
+    },
+    logout(state: any) {
+        state.user = null
+    },
+}
+
+export const actions = {
+    async logout(context: any) {
+        try {
+            await this.$axios.post('/logout')
+        } catch (err) {
+            console.error(err)
+        } finally {
+            context.commit('logout')
+        }
+    },
 }

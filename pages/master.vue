@@ -3,12 +3,12 @@
         <v-col md="3">
             <v-card>
                 <v-list>
-                    <v-list-item-group
-                        color="primary"
-                    >
+                    <v-list-item-group color="primary">
                         <v-list-item to="/master/givetype" nuxt>
                             <v-list-item-content>
-                                <v-list-item-title>ประเภทการถวาย</v-list-item-title>
+                                <v-list-item-title
+                                    >ประเภทการถวาย</v-list-item-title
+                                >
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item to="/master/department" nuxt>
@@ -23,7 +23,9 @@
                         </v-list-item>
                         <v-list-item to="/master/paymenttype" nuxt>
                             <v-list-item-content>
-                                <v-list-item-title>ช่องทางการจ่ายเงิน</v-list-item-title>
+                                <v-list-item-title
+                                    >ช่องทางการจ่ายเงิน</v-list-item-title
+                                >
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item to="/master/role" nuxt>
@@ -42,10 +44,7 @@
 </template>
 
 <script>
-export default {
-}
+export default {}
 </script>
 
-<style>
-
-</style>
+<style></style>

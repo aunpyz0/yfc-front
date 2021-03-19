@@ -1,11 +1,10 @@
-import { Context } from "@nuxt/types";
+import { Context } from '@nuxt/types'
 
-const skipRoutes = [
-    '/',
-]
-
-export default function(context: Context) {
-    if (!skipRoutes.includes(context.route.path) && !context.store.state.isLogIn) {
+export default function (context: Context) {
+    if (context.route.path === '/' && context.store.state.user.user) {
+        return context.redirect('/give')
+    }
+    if (context.route.path !== '/' && !context.store.state.user.user) {
         return context.redirect('/')
     }
 }

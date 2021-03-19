@@ -1,15 +1,9 @@
 <template>
     <v-row>
         <v-col>
-            <v-data-table
-                :headers="headers"
-                :items="items"
-                class="elevation-1"
-            >
-                <template v-slot:top>
-                    <v-toolbar
-                        flat
-                    >
+            <v-data-table :headers="headers" :items="items" class="elevation-1">
+                <template #top>
+                    <v-toolbar flat>
                         <v-toolbar-title>All Role</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-spacer></v-spacer>
@@ -27,8 +21,8 @@ export default {
             headers: [
                 {
                     text: 'Role',
-                    value: 'name'
-                }
+                    value: 'name',
+                },
             ],
             items: [],
         }
@@ -43,6 +37,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
