@@ -1022,8 +1022,14 @@ export default {
                 )
             }
             if (found.giveTypeId === 1) {
-                this.editedItem.giveFrom = format(parseISO(found.giveFrom), 'yyyy-MM')
-                this.editedItem.giveTo = format(parseISO(found.giveTo), 'yyyy-MM')
+                this.editedItem.giveFrom = format(
+                    parseISO(found.giveFrom),
+                    'yyyy-MM'
+                )
+                this.editedItem.giveTo = format(
+                    parseISO(found.giveTo),
+                    'yyyy-MM'
+                )
             }
         },
         deleteItem(item) {
