@@ -1,10 +1,35 @@
 import { Context } from '@nuxt/types'
 
-export default function ({ $axios, store }: Context) {
+const IGNORE_PATHS = [
+    '/login',
+    '/refresh'
+]
+
+interface RefreshData {
+    accessToken: string
+}
+
+export default function ({ $axios, store, redirect }: Context) {
     $axios.onRequest((config) => {
-        const user = store.state.user.user
-        if (user) {
-            config.headers['Authorization'] = `Bearer ${user.accessToken}`
+        const ignore = IGNORE_PATHS.includes(config.url!)
+        const user = store.state.user.data
+        if (user && !ignore) {
+            config.headers.Authorization = `Bearer ${user.accessToken}`
         }
+        return config
+    })
+
+    $axios.onError((error) => {
+        let failRequest = error.config
+        if (error.response?.status === 401 && !IGNORE_PATHS.includes(error.config.url!)) {
+                return $axios.$post<RefreshData>('/refresh', {
+                    refreshToken: store.state.user.data.refreshToken
+                }).then((data) => {
+                    store.commit('user/setAccessToken', data.accessToken)
+                    failRequest.headers.Authorization = `Bearer ${data.accessToken}`
+                    return $axios(failRequest)
+                })
+        }
+        return Promise.reject(error)
     })
 }

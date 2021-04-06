@@ -1,24 +1,26 @@
+interface User {
+    role?: string,
+    refreshToken?: string,
+    accessToken?: string,
+    firstname?: string,
+    lastname?: string,
+}
+
 export const state = () => ({
-    user: null,
+    data: null,
 })
 
 export const mutations = {
-    setUser(state: any, user: any) {
-        state.user = user
+    setUser(state: any, user: User) {
+        state.data = { ...user }
     },
     logout(state: any) {
-        state.user = null
+        state.data = null
     },
-}
-
-export const actions = {
-    async logout(context: any) {
-        try {
-            await this.$axios.post('/logout')
-        } catch (err) {
-            console.error(err)
-        } finally {
-            context.commit('logout')
+    setAccessToken(state: any, accessToken: string) {
+        state.data = {
+            ...state.data,
+            accessToken
         }
-    },
+    }
 }

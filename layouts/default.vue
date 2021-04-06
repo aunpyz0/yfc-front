@@ -34,10 +34,10 @@ export default {
             return link.links
         },
         isLogIn() {
-            return !!this.$store.state.user.user
+            return !!this.$store.state.user.data
         },
         user() {
-            return this.$store.state.user.user
+            return this.$store.state.user.data
         },
         links() {
             const links = [
@@ -67,9 +67,11 @@ export default {
     },
     methods: {
         logout() {
-            this.$store
-                .dispatch('user/logout')
-                .then(() => this.$router.push('/'))
+            this.$axios.$post('/logout')
+                .finally(() => {
+                    this.$store.commit('user/logout')
+                    this.$router.push('/')
+                })
         },
     },
 }
