@@ -13,7 +13,12 @@
                     {{ link.name }}
                 </v-tab>
             </v-tabs>
-            <v-btn v-if="isLogIn" @click="logout()">logout</v-btn>
+            <v-btn v-if="isLogIn" @click="logout()">
+                <v-icon class="mr-2">
+                    mdi-door-open
+                </v-icon>
+                logout
+            </v-btn>
         </v-app-bar>
         <v-main class="grey lighten-3">
             <v-container>
@@ -67,10 +72,11 @@ export default {
     },
     methods: {
         logout() {
-            this.$axios.$post('/logout')
-                .finally(() => {
-                    this.$store.commit('user/logout')
+            this.$axios
+                .$post('/logout')
+                .then(() => {
                     this.$router.push('/')
+                    this.$store.commit('user/logout')
                 })
         },
     },

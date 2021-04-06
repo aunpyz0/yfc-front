@@ -40,6 +40,9 @@
                                     v-bind="attrs"
                                     v-on="on"
                                 >
+                                    <v-icon class="mr-2">
+                                        mdi-plus
+                                    </v-icon>
                                     เพิ่มข้อมูล
                                 </v-btn>
                             </template>
@@ -613,6 +616,7 @@
                                                 dense
                                             ></v-select>
                                             <v-select
+                                                v-if="role === 'ACCOUNTANT'"
                                                 v-model="editedItem.ownerId"
                                                 label="ผู้ติดตาม"
                                                 :items="staffsWithFullname"
@@ -849,9 +853,9 @@ export default {
                 return item
             })
         },
-        user() {
-            return this.$store.state.user.data
-        },
+        role() {
+            return (this.$store.state.user.data && this.$store.state.user.data.role) || ''
+        }
     },
     watch: {
         dialog(val) {
@@ -887,7 +891,7 @@ export default {
             this.banks = banks
             this.giveTypes = giveTypes
             this.departments = departments
-            if (this.user.role === 'ACCOUNTANT') {
+            if (this.role === 'ACCOUNTANT') {
                 const staffs = await this.$axios.$get('/staffs')
                 this.staffs = staffs
             }
