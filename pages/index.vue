@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-row justify="center">
-            <v-col md="3">
+            <v-col md="4">
                 <v-sheet elevation="2" class="pa-8">
                     <v-alert type="error" v-if="error !== ''">{{ error }}</v-alert>
                     <form @submit.prevent="login">
