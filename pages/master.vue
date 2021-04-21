@@ -21,6 +21,11 @@
                                 <v-list-item-title>ธนาคาร</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
+                        <v-list-item to="/master/yfcbank" nuxt>
+                            <v-list-item-content>
+                                <v-list-item-title>ธนาคารของ YFC</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
                         <v-list-item to="/master/paymenttype" nuxt>
                             <v-list-item-content>
                                 <v-list-item-title

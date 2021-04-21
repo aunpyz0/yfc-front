@@ -233,7 +233,7 @@
                                                             editedItem.transferToBankId
                                                         "
                                                         label="โอนเข้าธนาคาร"
-                                                        :items="banks"
+                                                        :items="yfcBanks"
                                                         item-text="name"
                                                         item-value="id"
                                                         outlined
@@ -781,6 +781,7 @@ export default {
             giveTypes: [],
             departments: [],
             paymentTypes: [],
+            yfcBanks: [],
         }
     },
     computed: {
@@ -877,6 +878,7 @@ export default {
                 banks,
                 giveTypes,
                 departments,
+                yfcBanks,
             ] = await Promise.all([
                 this.$axios.$get('/gives'),
                 this.$axios.$get('/supporters'),
@@ -884,6 +886,7 @@ export default {
                 this.$axios.$get('/banks'),
                 this.$axios.$get('/givetypes'),
                 this.$axios.$get('/departments'),
+                this.$axios.$get('/yfcbanks'),
             ])
             this.gives = gives
             this.supporters = supporters
@@ -891,6 +894,7 @@ export default {
             this.banks = banks
             this.giveTypes = giveTypes
             this.departments = departments
+            this.yfcBanks = yfcBanks
             if (this.role === 'ACCOUNTANT') {
                 const staffs = await this.$axios.$get('/staffs')
                 this.staffs = staffs
