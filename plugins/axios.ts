@@ -30,6 +30,11 @@ export default function ({ $axios, store, redirect }: Context) {
                     return $axios(failRequest)
                 })
         }
+        if (error.response?.status === 401 && error.config.url === '/refresh') {
+            store.commit('user/logout')
+            redirect('/')
+            return Promise.reject(error)
+        }
         return Promise.reject(error)
     })
 }
