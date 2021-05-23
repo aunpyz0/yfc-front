@@ -730,20 +730,12 @@ export default {
                     value: 'amount',
                 },
                 {
-                    text: 'ประเภทเงินถวาย',
-                    value: 'giveType',
-                },
-                {
-                    text: 'แผนก',
-                    value: 'department.name',
-                },
-                {
-                    text: 'ผู้ติดตาม',
-                    value: 'ownerFullname',
+                    text: 'ผู้บันทึก',
+                    value: 'receiverFullname',
                 },
                 {
                     text: 'ช่องทางการจ่ายเงิน',
-                    value: 'paymentType.name',
+                    value: 'paymenType',
                 },
                 {
                     text: 'รายละเอียดการจ่ายเงิน',
@@ -800,9 +792,9 @@ export default {
                     ...give,
                     supporterFullname: `${give.supporter.firstname} ${give.supporter.lastname}`,
                     amount: numeral(give.amount).format('0,0.00'),
-                    ownerFullname: `${give.owner.firstname} ${give.owner.lastname}`,
+                    receiverFullname: `${give.receiver.firstname} ${give.receiver.lastname}`,
                 }
-                if (give.paymentTypeId === 1) {
+                if (give.transferDetail) {
                     item.date = format(
                         new Date(give.transferDate),
                         'yyyy/MM/dd'
@@ -820,33 +812,14 @@ export default {
                         }</div>
                     `
                 }
-                if (give.paymentTypeId === 2) {
-                    item.date = format(new Date(give.receiveDate), 'yyyy/MM/dd')
-                    item.paymentDetail = '-'
-                }
-                if (give.paymentTypeId === 3) {
+                if (give.chequeDetail === 3) {
                     item.date = format(new Date(give.chequeDate), 'yyyy/MM/dd')
                     item.paymentDetail = `
-                        <div><span>เลขที่:</span> ${give.chequeNumber}</div>
+                        <div><span>เลขที่:</span> ${give.chequeNo}</div>
                         <div><span>วันที่:</span> ${item.date}</div>
                         <div><span>ธนาคาร:</span> ${give.chequeBank.name}</div>
                         <div><span>สาขา:</span> ${give.chequeBankBranch}</div>
                     `
-                }
-                if (give.giveTypeId === 1) {
-                    item.giveDetail = `
-                        <div>${give.giveType.name}</div>
-                        <div><span>จาก:</span> ${format(
-                            new Date(give.giveFrom),
-                            'yyyy-MM'
-                        )}</div>
-                        <div><span>ถึง:</span> ${format(
-                            new Date(give.giveTo),
-                            'yyyy-MM'
-                        )}</div>
-                    `
-                } else {
-                    item.giveDetail = give.giveType.name
                 }
                 if (give.evidence) {
                     item.url = this.imageURL(give.evidence)
@@ -874,26 +847,17 @@ export default {
             const [
                 gives,
                 supporters,
-                paymentTypes,
                 banks,
-                giveTypes,
-                departments,
                 yfcBanks,
             ] = await Promise.all([
                 this.$axios.$get('/gives'),
                 this.$axios.$get('/supporters'),
-                this.$axios.$get('/paymenttypes'),
                 this.$axios.$get('/banks'),
-                this.$axios.$get('/givetypes'),
-                this.$axios.$get('/departments'),
                 this.$axios.$get('/yfcbanks'),
             ])
             this.gives = gives
             this.supporters = supporters
-            this.paymentTypes = paymentTypes
             this.banks = banks
-            this.giveTypes = giveTypes
-            this.departments = departments
             this.yfcBanks = yfcBanks
             if (this.role === 'ACCOUNTANT') {
                 const staffs = await this.$axios.$get('/staffs')

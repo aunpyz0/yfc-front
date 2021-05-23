@@ -48,11 +48,9 @@
                                         dense
                                     ></v-text-field>
                                     <v-select
-                                        v-model="editedItem.roleId"
+                                        v-model="editedItem.role"
                                         label="Role"
                                         :items="roles"
-                                        item-text="name"
-                                        item-value="id"
                                         outlined
                                         dense
                                     ></v-select>
@@ -136,7 +134,7 @@ export default {
                 },
                 {
                     text: 'role',
-                    value: 'role.name',
+                    value: 'role',
                 },
                 {
                     text: '',
@@ -195,7 +193,7 @@ export default {
                     code: this.editedItem.code,
                     firstname: this.editedItem.firstname,
                     lastname: this.editedItem.lastname,
-                    roleId: this.editedItem.roleId,
+                    role: this.editedItem.role,
                     email: this.editedItem.email,
                     password: this.editedItem.password,
                 }
