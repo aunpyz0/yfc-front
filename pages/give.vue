@@ -71,21 +71,16 @@
                                                 dense
                                             ></v-text-field>
                                             <v-select
-                                                v-model="
-                                                    editedItem.paymentTypeId
-                                                "
+                                                v-model="editedItem.paymentType"
                                                 label="ช่องทางการจ่ายเงิน"
                                                 :items="paymentTypes"
-                                                item-text="name"
-                                                item-value="id"
                                                 outlined
                                                 dense
                                             ></v-select>
                                             <!-- Begin Bank Transfer -->
                                             <v-row
                                                 v-show="
-                                                    editedItem.paymentTypeId ===
-                                                    1
+                                                    editedItem.paymentType === 'TRANSFER'
                                                 "
                                                 class="mt-0"
                                             >
@@ -99,7 +94,7 @@
                                                             false
                                                         "
                                                         :return-value.sync="
-                                                            editedItem.transferDate
+                                                            editedItem.transferDetail.transferDate
                                                         "
                                                         transition="scale-transition"
                                                         offset-y
@@ -113,7 +108,7 @@
                                                         >
                                                             <v-text-field
                                                                 v-model="
-                                                                    editedItem.transferDate
+                                                                    editedItem.transferDetail.transferDate
                                                                 "
                                                                 label="วันที่โอน"
                                                                 prepend-icon="mdi-calendar"
@@ -125,7 +120,7 @@
                                                         </template>
                                                         <v-date-picker
                                                             v-model="
-                                                                editedItem.transferDate
+                                                                editedItem.transferDetail.transferDate
                                                             "
                                                             type="date"
                                                             no-title
@@ -146,7 +141,7 @@
                                                                 color="primary"
                                                                 @click="
                                                                     $refs.transferDate.save(
-                                                                        editedItem.transferDate
+                                                                        editedItem.transferDetail.transferDate
                                                                     )
                                                                 "
                                                             >
@@ -177,7 +172,7 @@
                                                         >
                                                             <v-text-field
                                                                 v-model="
-                                                                    editedItem.transferTime
+                                                                    editedItem.transferDetail.transferTime
                                                                 "
                                                                 label="เวลาที่โอน"
                                                                 prepend-icon="mdi-clock-outline"
@@ -190,7 +185,7 @@
                                                         </template>
                                                         <v-time-picker
                                                             v-model="
-                                                                editedItem.transferTime
+                                                                editedItem.transferDetail.transferTime
                                                             "
                                                             format="24hr"
                                                         >
@@ -209,7 +204,7 @@
                                                                 color="primary"
                                                                 @click="
                                                                     $refs.transferTime.save(
-                                                                        editedItem.transferTime
+                                                                        editedItem.transferDetail.transferTime
                                                                     )
                                                                 "
                                                             >
@@ -219,7 +214,7 @@
                                                     </v-menu>
                                                     <v-select
                                                         v-model="
-                                                            editedItem.transferFromBankId
+                                                            editedItem.transferDetail.transferFromBankId
                                                         "
                                                         label="โอนจากธนาคาร"
                                                         :items="banks"
@@ -230,7 +225,7 @@
                                                     ></v-select>
                                                     <v-select
                                                         v-model="
-                                                            editedItem.transferToBankId
+                                                            editedItem.transferDetail.transferToBankId
                                                         "
                                                         label="โอนเข้าธนาคาร"
                                                         :items="yfcBanks"
@@ -260,95 +255,17 @@
                                                 </v-col>
                                             </v-row>
                                             <!-- End Bank Transfer -->
-                                            <!-- Begin Cash -->
-                                            <v-row
-                                                v-show="
-                                                    editedItem.paymentTypeId ===
-                                                    2
-                                                "
-                                                class="mt-0"
-                                            >
-                                                <v-col>
-                                                    <v-menu
-                                                        ref="receiveDate"
-                                                        v-model="
-                                                            isShowReceiveDatePicker
-                                                        "
-                                                        :close-on-content-click="
-                                                            false
-                                                        "
-                                                        :return-value.sync="
-                                                            editedItem.receiveDate
-                                                        "
-                                                        transition="scale-transition"
-                                                        offset-y
-                                                        min-width="auto"
-                                                    >
-                                                        <template
-                                                            #activator="{
-                                                                on,
-                                                                attrs,
-                                                            }"
-                                                        >
-                                                            <v-text-field
-                                                                v-model="
-                                                                    editedItem.receiveDate
-                                                                "
-                                                                label="วันที่ส่งเงินให้เจ้าหน้าที่บัญชี"
-                                                                prepend-icon="mdi-calendar"
-                                                                readonly
-                                                                v-bind="attrs"
-                                                                dense
-                                                                class="mb-4"
-                                                                v-on="on"
-                                                            ></v-text-field>
-                                                        </template>
-                                                        <v-date-picker
-                                                            v-model="
-                                                                editedItem.receiveDate
-                                                            "
-                                                            type="date"
-                                                            no-title
-                                                            scrollable
-                                                        >
-                                                            <v-spacer></v-spacer>
-                                                            <v-btn
-                                                                text
-                                                                color="primary"
-                                                                @click="
-                                                                    isShowReceiveDatePicker = false
-                                                                "
-                                                            >
-                                                                ยกเลิก
-                                                            </v-btn>
-                                                            <v-btn
-                                                                text
-                                                                color="primary"
-                                                                @click="
-                                                                    $refs.receiveDate.save(
-                                                                        editedItem.receiveDate
-                                                                    )
-                                                                "
-                                                            >
-                                                                ตกลง
-                                                            </v-btn>
-                                                        </v-date-picker>
-                                                    </v-menu>
-                                                </v-col>
-                                            </v-row>
-                                            <!-- End Cash -->
                                             <!-- Begin Cheque -->
                                             <v-row
                                                 v-show="
-                                                    editedItem.paymentTypeId ===
-                                                    3
+                                                    editedItem.paymentType === 'CHEQUE'
                                                 "
                                                 class="mt-0"
                                             >
                                                 <v-col>
                                                     <v-select
                                                         v-model="
-                                                            editedItem.giveTypeId
+                                                            editedItem.chequeDetail.chequeBankId
                                                         "
                                                         label="ธนาคาร"
                                                         :items="banks"
@@ -359,7 +276,7 @@
                                                     ></v-select>
                                                     <v-text-field
                                                         v-model="
-                                                            editedItem.chequeBankBranch
+                                                            editedItem.chequeDetail.chequeBankBranch
                                                         "
                                                         label="สาขา"
                                                         outlined
@@ -367,7 +284,7 @@
                                                     ></v-text-field>
                                                     <v-text-field
                                                         v-model="
-                                                            editedItem.chequeNumber
+                                                            editedItem.chequeDetail.chequeNo
                                                         "
                                                         label="เลขที่เช็ค"
                                                         outlined
@@ -382,7 +299,7 @@
                                                             false
                                                         "
                                                         :return-value.sync="
-                                                            editedItem.chequeDate
+                                                            editedItem.chequeDetail.chequeDate
                                                         "
                                                         transition="scale-transition"
                                                         offset-y
@@ -396,7 +313,7 @@
                                                         >
                                                             <v-text-field
                                                                 v-model="
-                                                                    editedItem.chequeDate
+                                                                    editedItem.chequeDetail.chequeDate
                                                                 "
                                                                 label="วันที่เช็ค"
                                                                 prepend-icon="mdi-calendar"
@@ -408,7 +325,7 @@
                                                         </template>
                                                         <v-date-picker
                                                             v-model="
-                                                                editedItem.chequeDate
+                                                                editedItem.chequeDetail.chequeDate
                                                             "
                                                             type="date"
                                                             no-title
@@ -429,7 +346,7 @@
                                                                 color="primary"
                                                                 @click="
                                                                     $refs.chequeDate.save(
-                                                                        editedItem.chequeDate
+                                                                        editedItem.chequeDetail.chequeDate
                                                                     )
                                                                 "
                                                             >
@@ -459,165 +376,8 @@
                                             </v-row>
                                             <!-- End Cheque -->
                                             <v-select
-                                                v-model="editedItem.giveTypeId"
-                                                label="ประเภทการถวาย"
-                                                :items="giveTypes"
-                                                item-text="name"
-                                                item-value="id"
-                                                outlined
-                                                dense
-                                            ></v-select>
-                                            <v-row
-                                                v-show="
-                                                    editedItem.giveTypeId === 1
-                                                "
-                                            >
-                                                <v-col>
-                                                    <v-menu
-                                                        ref="giveFrom"
-                                                        v-model="
-                                                            isShowGiveFromPicker
-                                                        "
-                                                        :close-on-content-click="
-                                                            false
-                                                        "
-                                                        :return-value.sync="
-                                                            editedItem.giveFrom
-                                                        "
-                                                        transition="scale-transition"
-                                                        offset-y
-                                                        min-width="auto"
-                                                    >
-                                                        <template
-                                                            #activator="{
-                                                                on,
-                                                                attrs,
-                                                            }"
-                                                        >
-                                                            <v-text-field
-                                                                v-model="
-                                                                    editedItem.giveFrom
-                                                                "
-                                                                label="จากเดือน"
-                                                                prepend-icon="mdi-calendar"
-                                                                readonly
-                                                                v-bind="attrs"
-                                                                dense
-                                                                v-on="on"
-                                                            ></v-text-field>
-                                                        </template>
-                                                        <v-date-picker
-                                                            v-model="
-                                                                editedItem.giveFrom
-                                                            "
-                                                            type="month"
-                                                            no-title
-                                                            scrollable
-                                                        >
-                                                            <v-spacer></v-spacer>
-                                                            <v-btn
-                                                                text
-                                                                color="primary"
-                                                                @click="
-                                                                    isShowGiveFromPicker = false
-                                                                "
-                                                            >
-                                                                ยกเลิก
-                                                            </v-btn>
-                                                            <v-btn
-                                                                text
-                                                                color="primary"
-                                                                @click="
-                                                                    $refs.giveFrom.save(
-                                                                        editedItem.giveFrom
-                                                                    )
-                                                                "
-                                                            >
-                                                                ตกลง
-                                                            </v-btn>
-                                                        </v-date-picker>
-                                                    </v-menu>
-                                                    <v-menu
-                                                        ref="giveTo"
-                                                        v-model="
-                                                            isShowGiveToPicker
-                                                        "
-                                                        :close-on-content-click="
-                                                            false
-                                                        "
-                                                        :return-value.sync="
-                                                            editedItem.giveTo
-                                                        "
-                                                        transition="scale-transition"
-                                                        offset-y
-                                                        min-width="auto"
-                                                    >
-                                                        <template
-                                                            #activator="{
-                                                                on,
-                                                                attrs,
-                                                            }"
-                                                        >
-                                                            <v-text-field
-                                                                v-model="
-                                                                    editedItem.giveTo
-                                                                "
-                                                                label="ถึงเดือน"
-                                                                prepend-icon="mdi-calendar"
-                                                                readonly
-                                                                v-bind="attrs"
-                                                                dense
-                                                                class="mb-4"
-                                                                v-on="on"
-                                                            ></v-text-field>
-                                                        </template>
-                                                        <v-date-picker
-                                                            v-model="
-                                                                editedItem.giveTo
-                                                            "
-                                                            type="month"
-                                                            no-title
-                                                            scrollable
-                                                        >
-                                                            <v-spacer></v-spacer>
-                                                            <v-btn
-                                                                text
-                                                                color="primary"
-                                                                @click="
-                                                                    isShowGiveToPicker = false
-                                                                "
-                                                            >
-                                                                ยกเลิก
-                                                            </v-btn>
-                                                            <v-btn
-                                                                text
-                                                                color="primary"
-                                                                @click="
-                                                                    $refs.giveTo.save(
-                                                                        editedItem.giveTo
-                                                                    )
-                                                                "
-                                                            >
-                                                                ตกลง
-                                                            </v-btn>
-                                                        </v-date-picker>
-                                                    </v-menu>
-                                                </v-col>
-                                            </v-row>
-                                            <v-select
-                                                v-model="
-                                                    editedItem.departmentId
-                                                "
-                                                label="แผนก"
-                                                :items="departments"
-                                                item-text="name"
-                                                item-value="id"
-                                                outlined
-                                                dense
-                                            ></v-select>
-                                            <v-select
                                                 v-if="role === 'ACCOUNTANT'"
-                                                v-model="editedItem.ownerId"
+                                                v-model="editedItem.receiverId"
                                                 label="ผู้ติดตาม"
                                                 :items="staffsWithFullname"
                                                 item-text="fullName"
@@ -746,11 +506,8 @@ export default {
                     value: 'actions',
                 },
             ],
-            isShowReceiveDatePicker: false,
             isShowTransferDatePicker: false,
             isShowTransferTimePicker: false,
-            isShowGiveFromPicker: false,
-            isShowGiveToPicker: false,
             isShowChequeDatePicker: false,
             alert: {
                 isShow: false,
@@ -759,20 +516,27 @@ export default {
             deleteDialog: false,
             isShowEvidence: false,
             editedItem: {
-                paymentTypeId: 1,
-                giveTypeId: 1,
+                paymentType: 'TRANSFER',
                 url: null,
-                transferFromBankId: 1,
-                transferToBankId: 1,
-                chequeBankId: 1,
+                transferDetail: {
+                    transferFromBankId: 1,
+                    transferToBankId: 1,
+                },
+                chequeDetail: {
+                    chequeBankId: 1,
+                }
             },
             gives: [],
             staffs: [],
             supporters: [],
             banks: [],
-            giveTypes: [],
-            departments: [],
-            paymentTypes: [],
+            PaymentType: {
+                TRANSFER: 'TRANSFER',
+                CHEQUE: 'CHEQUE',
+            },
+            paymentTypes: [
+                'TRANSFER', 'CHEQUE'
+            ],
             yfcBanks: [],
         }
     },
@@ -794,25 +558,25 @@ export default {
                     amount: numeral(give.amount).format('0,0.00'),
                     receiverFullname: `${give.receiver.firstname} ${give.receiver.lastname}`,
                 }
-                if (give.transferDetail) {
-                    item.date = format(
-                        new Date(give.transferDate),
-                        'yyyy/MM/dd'
-                    )
-                    item.paymentDetail = `
-                        <div><span>วันเวลา:</span> ${format(
-                            new Date(give.transferDate),
-                            'yyyy/MM/dd hh:mm'
-                        )}</div>
-                        <div><span>จาก:</span> ${
-                            item.transferFromBank.name
-                        }</div>
-                        <div><span>ไปที่:</span> ${
-                            item.transferToBank.name
-                        }</div>
-                    `
-                }
-                if (give.chequeDetail === 3) {
+                // if (give.transferDetail) {
+                //     item.date = format(
+                //         new Date(give.transferDate),
+                //         'yyyy/MM/dd'
+                //     )
+                //     item.paymentDetail = `
+                //         <div><span>วันเวลา:</span> ${format(
+                //             new Date(give.transferDate),
+                //             'yyyy/MM/dd hh:mm'
+                //         )}</div>
+                //         <div><span>จาก:</span> ${
+                //             item.transferFromBank.name
+                //         }</div>
+                //         <div><span>ไปที่:</span> ${
+                //             item.transferToBank.name
+                //         }</div>
+                //     `
+                // }
+                if (give.chequeDetail) {
                     item.date = format(new Date(give.chequeDate), 'yyyy/MM/dd')
                     item.paymentDetail = `
                         <div><span>เลขที่:</span> ${give.chequeNo}</div>
@@ -870,8 +634,7 @@ export default {
     methods: {
         reset() {
             this.editedItem = {
-                paymentTypeId: 1,
-                giveTypeId: 1,
+                paymentType: 'TRANSFER',
                 url: null,
                 transferFromBankId: 1,
                 transferToBankId: 1,
@@ -888,52 +651,54 @@ export default {
                     id: this.editedItem.id,
                     supporterId: this.editedItem.supporterId,
                     amount: this.editedItem.amount,
-                    paymentTypeId: this.editedItem.paymentTypeId,
-                    giveTypeId: this.editedItem.giveTypeId,
-                    ownerId: this.editedItem.ownerId,
-                    departmentId: this.editedItem.departmentId,
+                    receiverId: this.editedItem.receiverId,
                 }
 
-                if (give.paymentTypeId === 1) {
-                    // bank transfer
+                if (this.editedItem.paymentType === 'TRANSFER') {
                     const [hours, minutes] = this.editedItem.transferTime.split(
                         ':'
                     )
-                    give.transferDate = set(
-                        parseISO(this.editedItem.transferDate),
-                        { hours, minutes }
-                    )
-                    give.transferFromBankId = this.editedItem.transferFromBankId
-                    give.transferToBankId = this.editedItem.transferToBankId
-                    give.evidence = this.editedItem.evidence
+                    const transferDetail = {
+                        transferDate: set(
+                            parseISO(this.editedItem.transferDate),
+                            { hours, minutes }
+                        ),
+                        transferFromBankId: this.editedItem.transferFromBankId,
+                        transferToBankId: this.editedItem.transferToBankId,
+                        evidence: this.editedItem.evidence,
+                    }
+                    give.transferDetail = transferDetail
                 }
-                if (give.paymentTypeId === 2) {
-                    // cash
-                    give.receiveDate = parseISO(this.editedItem.receiveDate)
-                }
-                if (give.paymentTypeId === 3) {
-                    // cheque
-                    give.chequeBankId = this.editedItem.chequeBankId
-                    give.chequeBankBranch = this.editedItem.chequeBankBranch
-                    give.chequeNumber = this.editedItem.chequeNumber
-                    give.chequeDate = parseISO(this.editedItem.chequeDate)
-                    give.evidence = this.editedItem.evidence
-                }
-                if (give.giveTypeId === 1) {
-                    give.giveFrom = parseISO(this.editedItem.giveFrom)
-                    give.giveTo = parseISO(this.editedItem.giveTo)
+                if (this.editedItem.paymentType === 'CHEQUE') {
+                    const chequeDetail = {
+                        chequeBankId: this.editedItem.chequeBankId,
+                        chequeBankBranch: this.editedItem.chequeBankBranch,
+                        chequeNo: this.editedItem.chequeNo,
+                        chequeDate: parseISO(this.editedItem.chequeDate),
+                        evidence: this.editedItem.evidence
+                    }
+                    give.chequeDetail = chequeDetail
                 }
 
                 const data = new FormData()
-                Object.keys(give).forEach((key) => {
-                    data.append(key, give[key])
-                })
+                for (let key in give) {
+                    if (key === 'transferDetail') {
+                        for (let tkey in [give[tkey]]) {
+                            data.append(`transferDetail[${tkey}]`, give.transferDetail[tkey])
+                        }
+                    } else if (key === 'chequeDetail') {
+                        for (let ckey in [give[tkey]]) {
+                            data.append(`chequeDetail[${ckey}]`, give.chequeDetail[tkey])
+                        }
+                    } else {
+                        data.append(key, give[key])
+                    }
+                }
                 const config = {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 }
-
                 if (give.id) {
                     await this.$axios.$put(`/gives/${give.id}`, data, config)
                 } else {
@@ -970,8 +735,8 @@ export default {
                 evidence: null,
                 url: this.imageURL(found.evidence),
             }
-            if (found.paymentTypeId === 1) {
-                const transferDate = parseISO(found.transferDate)
+            if (found.transferDetail) {
+                const transferDate = parseISO(found.transferDetail.transferDate)
                 const transferTime = `${getHours(transferDate)}:${getMinutes(
                     transferDate
                 )}`
@@ -981,26 +746,10 @@ export default {
                 )
                 this.editedItem.transferTime = transferTime
             }
-            if (found.paymentTypeId === 2) {
-                this.editedItem.receiveDate = format(
-                    parseISO(found.receiveDate),
-                    'yyyy-MM-dd'
-                )
-            }
-            if (found.paymentTypeId === 3) {
+            if (found.chequeDetail) {
                 this.editedItem.chequeDate = format(
-                    parseISO(found.chequeDate),
+                    parseISO(found.chequeDetail.chequeDate),
                     'yyyy-MM-dd'
-                )
-            }
-            if (found.giveTypeId === 1) {
-                this.editedItem.giveFrom = format(
-                    parseISO(found.giveFrom),
-                    'yyyy-MM'
-                )
-                this.editedItem.giveTo = format(
-                    parseISO(found.giveTo),
-                    'yyyy-MM'
                 )
             }
         },
